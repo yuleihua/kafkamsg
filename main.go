@@ -17,6 +17,7 @@ var (
 	topics   string
 	hosts    string
 	dir      string
+	offset   string
 	loglevel int
 )
 
@@ -25,6 +26,7 @@ func init() {
 	flag.StringVar(&hosts, "h", "127.0.0.1:9092", "broker setting")
 	flag.IntVar(&loglevel, "l", 5, "log level")
 	flag.StringVar(&dir, "d", "./kdata", "output directory setting")
+	flag.StringVar(&offset, "o", "oldest", "offset, oldest or newest")
 }
 
 func main() {
@@ -47,7 +49,7 @@ func main() {
 
 	log.Infof("%v", vs)
 	// handle
-	if err := Setup(vs, dir); err != nil {
+	if err := Setup(vs, dir, offset); err != nil {
 		log.Fatalf("Setup error:%v", err)
 	}
 

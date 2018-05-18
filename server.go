@@ -21,9 +21,10 @@ type WorkerInfo struct {
 	wg         sync.WaitGroup
 	lock       sync.Mutex
 	dir        string
+	isNewest   bool
 }
 
-func Setup(sk *KafkaServer, dir string) error {
+func Setup(sk *KafkaServer, dir, offset string) error {
 	if sk == nil {
 		return errors.New("invalid parameter")
 	}
@@ -38,6 +39,9 @@ func Setup(sk *KafkaServer, dir string) error {
 	wkctx.dir = dir
 	wkctx.tps = sk.Topics
 	wkctx.interval = 200 * time.Millisecond
+	if offset == "newest" {
+		wkctx.isNewest = true
+	}
 	log.Infof("server initiation end")
 	return nil
 }
@@ -51,7 +55,11 @@ func readHandle(topic string, pidx int32) {
 	}
 	defer file.Close()
 
-	pc, err := wkctx.consumer.ConsumePartition(topic, pidx, sarama.OffsetOldest)
+	offsetFlag := sarama.OffsetOldest
+	if wkctx.isNewest {
+		offsetFlag = sarama.OffsetNewest
+	}
+	pc, err := wkctx.consumer.ConsumePartition(topic, pidx, offsetFlag)
 	if err != nil {
 		log.Fatalf("Kafka ConsumePartition error, topic:%v, error:%v", topic, err)
 	}

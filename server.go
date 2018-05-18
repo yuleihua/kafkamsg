@@ -33,7 +33,7 @@ func Setup(sk *KafkaServer, dir, offset string) error {
 	conf.Net.DialTimeout = time.Duration(sk.Timeout) * time.Second
 	consumer, err := sarama.NewConsumer(sk.Addrs, conf)
 	if err != nil {
-		log.Fatalf("Kafka newConsumer error, addr:%v, error:%v")
+		log.Fatalf("Kafka newConsumer error, addr:%v, error:%v", sk.Addrs, err)
 	}
 	wkctx.consumer = consumer
 	wkctx.dir = dir

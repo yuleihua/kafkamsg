@@ -22,10 +22,10 @@ var (
 )
 
 func init() {
-	flag.StringVar(&topics, "t", "venus", "topic setting")
+	flag.StringVar(&topics, "t", "test", "topic setting")
 	flag.StringVar(&hosts, "h", "127.0.0.1:9092", "broker setting")
 	flag.IntVar(&loglevel, "l", 5, "log level")
-	flag.StringVar(&dir, "d", "./kdata", "output directory setting")
+	flag.StringVar(&dir, "d", ".", "output directory setting")
 	flag.StringVar(&offset, "o", "oldest", "offset, oldest or newest")
 }
 
